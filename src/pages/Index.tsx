@@ -166,7 +166,7 @@ const Index = () => {
           <span>Eres más dulce que cualquier chocolate</span>
           <span className="text-3xl animate-float inline-block" style={{ animationDelay: "1s" }}>🍭</span>
         </div>
-        <p className="font-sans text-sm text-muted-foreground mt-4 opacity-90">
+        <p className="font-sans text-sm text-muted-foreground mt-4 opacity-100">
           Hecho con 💕 para endulzar tu día
         </p>
       </footer>
