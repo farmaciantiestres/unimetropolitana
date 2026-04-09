@@ -306,7 +306,6 @@ const frases = [
   "Mereces todos los abrazos del mundo 🤗",
   "La vida es dulce cuando te das permiso de disfrutarla 🍭",
   "Respira profundo... eres más fuerte de lo que crees 🌸"
-  Aquí tienes otras 500 frases motivacionales completamente nuevas y únicas (ninguna se repite de la lista anterior). Todas siguen el formato exacto solicitado:
 "Cuando sientas que no puedes más, recuerda todo lo que ya has superado 💪",
 "Rendirse es una opción, pero nunca será la tuya 🌟",
 "El cansancio es temporal, la victoria es eterna 🏆",
