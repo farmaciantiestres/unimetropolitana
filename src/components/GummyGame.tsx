@@ -3,6 +3,15 @@ import { useRelaxSound } from "@/hooks/useAudio";
 
 const GUMMY_EMOJIS = ["🍬", "🍭", "🧁", "🍩", "🍪", "🎂", "🍰", "🍡", "🍮"];
 
+type Speed = "relax" | "normal" | "fast" | "extreme";
+
+const SPEED_CONFIG: Record<Speed, { label: string; emoji: string; spawnMs: number; lifetimeCount: number }> = {
+  relax:   { label: "Relajado",   emoji: "🐢", spawnMs: 800, lifetimeCount: 8 },
+  normal:  { label: "Normal",     emoji: "🍭", spawnMs: 500, lifetimeCount: 5 },
+  fast:    { label: "Rápido",     emoji: "🔥", spawnMs: 300, lifetimeCount: 4 },
+  extreme: { label: "Extremo",    emoji: "⚡", spawnMs: 180, lifetimeCount: 3 },
+};
+
 interface Gummy {
   id: number;
   emoji: string;
@@ -17,10 +26,13 @@ export default function GummyGame() {
   const [running, setRunning] = useState(false);
   const [gummies, setGummies] = useState<Gummy[]>([]);
   const [highScore, setHighScore] = useState(0);
+  const [speed, setSpeed] = useState<Speed>("normal");
   const idRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const spawnRef = useRef<ReturnType<typeof setInterval>>();
   const { playPop } = useRelaxSound();
+
+  const config = SPEED_CONFIG[speed];
 
   const spawnGummy = useCallback(() => {
     const g: Gummy = {
@@ -60,20 +72,20 @@ export default function GummyGame() {
         return t - 1;
       });
     }, 1000);
-    spawnRef.current = setInterval(spawnGummy, 500);
+    spawnRef.current = setInterval(spawnGummy, config.spawnMs);
     return () => {
       clearInterval(timerRef.current);
       clearInterval(spawnRef.current);
     };
-  }, [running, spawnGummy, stopGame, score]);
+  }, [running, spawnGummy, stopGame, score, config.spawnMs]);
 
   useEffect(() => {
     if (!running) return;
     const interval = setInterval(() => {
-      setGummies((prev) => prev.filter((g) => idRef.current - g.id < 5));
+      setGummies((prev) => prev.filter((g) => idRef.current - g.id < config.lifetimeCount));
     }, 400);
     return () => clearInterval(interval);
-  }, [running]);
+  }, [running, config.lifetimeCount]);
 
   const smashGummy = (id: number) => {
     playPop();
@@ -86,6 +98,8 @@ export default function GummyGame() {
     }, 300);
   };
 
+  const speeds: Speed[] = ["relax", "normal", "fast", "extreme"];
+
   return (
     <div className="w-full">
       <h2 className="font-serif text-2xl md:text-3xl font-bold text-primary mb-2">
@@ -94,6 +108,25 @@ export default function GummyGame() {
       <p className="text-muted-foreground text-sm md:text-base mb-4">
         ¡Aplasta las gomitas antes de que desaparezcan! Libera tu estrés 💪
       </p>
+
+      {/* Speed selector */}
+      <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
+        <span className="font-sans text-sm font-semibold text-muted-foreground mr-1">Velocidad:</span>
+        {speeds.map((s) => (
+          <button
+            key={s}
+            onClick={() => !running && setSpeed(s)}
+            disabled={running}
+            className={`font-sans text-xs md:text-sm font-bold px-3 py-1.5 rounded-full border-2 transition-all ${
+              speed === s
+                ? "border-primary bg-primary text-primary-foreground scale-105 shadow-md"
+                : "border-border bg-background text-foreground hover:border-primary/50"
+            } ${running ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:scale-105"}`}
+          >
+            {SPEED_CONFIG[s].emoji} {SPEED_CONFIG[s].label}
+          </button>
+        ))}
+      </div>
 
       {/* Game area */}
       <div className="relative w-full h-[280px] md:h-[320px] bg-[hsl(var(--candy-rose)/0.4)] rounded-2xl overflow-hidden border-[3px] border-dashed border-[hsl(var(--candy-rose))] my-4 cursor-crosshair">
