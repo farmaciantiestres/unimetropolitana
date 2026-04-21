@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { id: "respiracion", label: "Respiración", emoji: "🌬️" },
   { id: "juego", label: "Juego", emoji: "🎮" },
   { id: "consejos", label: "Consejos", emoji: "🌸" },
+  { id: "redes", label: "Redes", emoji: "💖" },
 ];
 
 export default function Navbar() {
