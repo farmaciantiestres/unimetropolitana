@@ -49,11 +49,11 @@ export default function Navbar() {
           : "bg-transparent py-4"
       }`}
     >
-      <div className="max-w-[900px] mx-auto px-4 flex items-center justify-between">
+      <div className="max-w-[1100px] mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <button
           onClick={() => scrollTo("inicio")}
-          className="font-cursive text-2xl md:text-3xl text-primary hover:scale-105 transition-transform"
+          className="font-cursive text-2xl md:text-3xl text-primary hover:scale-105 transition-transform whitespace-nowrap shrink-0"
         >
           🍫 Farmacia Antiestrés
         </button>
