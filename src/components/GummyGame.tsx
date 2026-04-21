@@ -31,7 +31,12 @@ export default function GummyGame() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [running, setRunning] = useState(false);
   const [gummies, setGummies] = useState<Gummy[]>([]);
-  const [highScore, setHighScore] = useState(0);
+  const [highScores, setHighScores] = useState<Record<Speed, number>>({
+    relax: 0,
+    normal: 0,
+    fast: 0,
+    extreme: 0,
+  });
   const [speed, setSpeed] = useState<Speed>("normal");
   const [showNameModal, setShowNameModal] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
@@ -80,7 +85,7 @@ export default function GummyGame() {
         if (t <= 1) {
           stopGame();
           const s = scoreRef.current;
-          setHighScore((h) => Math.max(h, s));
+          setHighScores((prev) => ({ ...prev, [speed]: Math.max(prev[speed], s) }));
           setFinalScore(s);
           if (s > 0) setShowNameModal(true);
           return 0;
@@ -187,9 +192,9 @@ export default function GummyGame() {
             <p className="font-sans text-xl text-foreground">
               Puntuación: <span className="font-bold text-primary">{score}</span>
             </p>
-            {score >= highScore && score > 0 && (
+            {score >= highScores[speed] && score > 0 && (
               <p className="font-sans text-lg text-secondary mt-1 font-bold">
-                🏆 ¡Nuevo récord!
+                🏆 ¡Nuevo récord en {SPEED_CONFIG[speed].label}!
               </p>
             )}
           </div>
@@ -216,9 +221,9 @@ export default function GummyGame() {
         <div className="glass-card px-5 py-2 rounded-full border border-border">
           <span className="font-sans font-bold text-foreground">⏱️ {timeLeft}s</span>
         </div>
-        {highScore > 0 && (
+        {highScores[speed] > 0 && (
           <div className="glass-card px-5 py-2 rounded-full border border-border">
-            <span className="font-sans font-bold text-secondary">🏆 {highScore}</span>
+            <span className="font-sans font-bold text-secondary">🏆 {highScores[speed]} ({SPEED_CONFIG[speed].label})</span>
           </div>
         )}
       </div>
